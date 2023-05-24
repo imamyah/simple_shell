@@ -6,7 +6,6 @@
  *
  * Return: the value for the env_name
  */
-
 char *_getenv(const char *env_name)
 {
 	extern char **environ;
@@ -29,7 +28,6 @@ char *_getenv(const char *env_name)
  * @command: the input command
  * Return: 0
  */
-
 char *get_path(char *command)
 {
 	char *path = _getenv("PATH");

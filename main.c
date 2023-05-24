@@ -1,6 +1,18 @@
 #include "shell.h"
 
 /**
+ * exit_shell - handles the exit status
+ * Return: void
+ */
+
+void exit_shell(void)
+{/* Terminate the program with exit status 0*/
+	exit(0);
+}
+
+/*------ exit -----*/
+
+/**
  * main - creates a simple shell
  *
  * Return: 0

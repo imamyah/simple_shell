@@ -1,30 +1,10 @@
 #include "shell.h"
 
-<<<<<<< HEAD
 char *_getenv(const char *env_var)
 {
 	extern char **environ;
 	int i = 0;
 	char *key;
-=======
-/**
- * exit_shell - handles the exit status
- * Return: void
- */
-
-void exit_shell(void)
-{/* Terminate the program with exit status 0*/
-	exit(0);
-}
-
-/*------ exit -----*/
-
-/**
- * main - creates a simple shell
- *
- * Return: 0
- */
->>>>>>> 1d372e8783321367bec8e50ab288cdd25da73f84
 
 	while (environ[i])
 	{

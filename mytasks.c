@@ -27,6 +27,12 @@ char **splitter(char *str)
 			tok = strtok(NULL, " \t\n");
 		}
 	}
+	token = realloc(token, (i + 1) * sizeof(char *));
+	if (token == NULL)
+	{
+		perror("realloc");
+		exit(EXIT_FAILURE);
+	}
 	return (token);
 }
 
@@ -39,36 +45,31 @@ char **splitter(char *str)
 
 int handle_args(void)
 {
-	char *buffer;
+	char *buffer, **args;
 	size_t size = 0;
-	int chars = 0;
+	int chars = 0, i = 0;
 
 	buffer = NULL;
 	chars = getline(&buffer, &size, stdin);
 	if (chars == EOF)
 	{
 		perror("end of file");
+		return (1);
 	}
 	else
 	{
 		buffer[chars - 1] = '\0';
 		printf("%s\n", buffer);
 	}
+	args = splitter(buffer);
+	while (args[i] != NULL)
+	{
+		printf("Argument %d: %s\n", i, args[i]);
+		i++;
+	}
+	free(buffer);
+	free(args);
 	return (0);
 }
 
 /* -------- handle_ args ------ */
-
-/**
- * exit_shell - handles the exit status
- * Return: void
- */
-
-void exit_shell(void)
-{
-	/* Terminate the program with exit status 0*/
-	exit(0);
-}
-
-/* -------- exit_shell ------ */
-

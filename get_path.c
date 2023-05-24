@@ -6,9 +6,10 @@
  *
  * Return: the value for the env_name
  */
+
 char *_getenv(const char *env_name)
 {
-	char **environ = NULL;
+	extern char **environ;
 	char *key;
 	int i = 0;
 
@@ -28,21 +29,23 @@ char *_getenv(const char *env_name)
  * @command: the input command
  * Return: 0
  */
+
 char *get_path(char *command)
 {
 	char *path = _getenv("PATH");
 	char *token;
 	char *command_path;
 
-	command_path = malloc(sizeof(char *) * 1024);
 	token = strtok(path, ":");
 	while (token != NULL)
 	{
+		command_path = malloc(strlen(token) + strlen(command) + 2);
 		strcpy(command_path, token);
 		strcat(command_path, "/");
 		strcat(command_path, command);
 		if (access(command_path, X_OK) == 0)
-			return (0);
+			return (command_path);
+		free(command_path);
 		token = strtok(NULL, ":");
 	}
 	return (0);

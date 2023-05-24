@@ -34,8 +34,6 @@ char **splitter(char *str)
 
 /**
  * handle_args - handles the args passed to the main
- * @ac: args count (number of args)
- * @av: args vector (str of args)
  * Return: 0
  */
 

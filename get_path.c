@@ -8,7 +8,7 @@
  */
 char *_getenv(const char *env_name)
 {
-	extern char **environ;
+	char **environ = NULL;
 	char *key;
 	int i = 0;
 

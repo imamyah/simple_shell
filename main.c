@@ -6,6 +6,7 @@
  * @delim: delimeter
  * Return: str
  */
+
 char **get_string(char *buffer, char *delim)
 {
 	char **arrays;
@@ -26,7 +27,7 @@ char **get_string(char *buffer, char *delim)
 /* -------- get string ----- */
 
 /**
- * main - main function
+ * main - simple shell
  * @ac: arg count
  * @av: arg vector
  * @env: environ
@@ -36,14 +37,16 @@ char **get_string(char *buffer, char *delim)
 int main(int ac, char **av, char **env)
 {
 	size_t buffer_size = 0;
-	char **token, **array, *buffer = NULL,  *command;
+	char **token, *buffer = NULL;
 	int status, nread;
 	pid_t pid;
 	(void) ac;
 	(void) av;
+	(void) env;
 
 	while (1)
 	{
+		write(1, "$ ", 2);
 		write(1, "> ", 2);
 		nread = getline(&buffer, &buffer_size, stdin);
 		if (nread == -1)
@@ -55,20 +58,14 @@ int main(int ac, char **av, char **env)
 		token = get_string(buffer, " \t\n");
 		if (strcmp(token[0], "exit") == 0)
 			exit(0);
-
 		pid = fork();
 		if (pid == 0)
 		{
-			array = malloc(sizeof(char *) * 1024);
-			*array = buffer;
-			execve(array[0], array, NULL);
-
-			command = get_path(token[0]);
-			if (command)
-				execve(command, token, env);
-			else
+			if (execve(token[0], token, NULL) == -1)
+			{
 				printf("Command not found\n");
-			exit(0);
+				exit(0);
+			}
 		}
 		else
 			wait(&status);

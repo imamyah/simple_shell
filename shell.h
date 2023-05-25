@@ -11,7 +11,7 @@
 #include <sys/types.h>
 /* ---------- */
 
-
+extern char **environ;
 /* functions */
 /*task 2*/
 char **splitter(char *str);

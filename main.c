@@ -1,75 +1,43 @@
 #include "shell.h"
 
 /**
- * get_string - get commands
- * @buffer: buffer
- * @delim: delimeter
- * Return: str
- */
-
-char **get_string(char *buffer, char *delim)
-{
-	char **arrays;
-	char *arg;
-	int argc = 0;
-
-	arrays = malloc(sizeof(char *) * 1024);
-	arg = strtok(buffer, delim);
-	while (arg)
-	{
-		arrays[argc] = arg;
-		arg = strtok(NULL, delim);
-		argc++;
-	}
-	arrays[argc] = NULL;
-	return (arrays);
-}
-/* -------- get string ----- */
-
-/**
- * main - simple shell
+ * main - creates a simple shell
  * @ac: arg count
  * @av: arg vector
- * @env: environ
- * Return: int
+ * Return: 0
  */
 
-int main(int ac, char **av, char **env)
+int main(int ac, char *av[])
 {
-	size_t buffer_size = 0;
-	char **token, *buffer = NULL;
-	int status, nread;
-	pid_t pid;
-	(void) ac;
-	(void) av;
-	(void) env;
+	char *input, *command, *args[ARGS_SIZE];
+	int exit_loop = 0, loops = 0, result;
+	(void)ac;
+	(void)av;
 
-	while (1)
-	{
-		write(1, "$ ", 2);
-		write(1, "> ", 2);
-		nread = getline(&buffer, &buffer_size, stdin);
-		if (nread == -1)
-		{
-			write(1, "\n", 1);
-			exit(1);
-		}
-		buffer[nread - 1] = '\0';
-		token = get_string(buffer, " \t\n");
-		if (strcmp(token[0], "exit") == 0)
-			exit(0);
-		pid = fork();
-		if (pid == 0)
-		{
-			if (execve(token[0], token, NULL) == -1)
+	if (isatty(STDIN_FILENO) == 1)
+	{/*if associated to a terminal*/
+		while (exit_loop != 1)
+		{/*shell main loop*/
+			write(STDOUT_FILENO, "Shell$ ", 7);
+			fflush(stdout); /*flush output buffer*/
+			input = read_cmd();
+			if (input != NULL)
 			{
-				printf("Command not found\n");
-				exit(0);
+				comments(input);
+				splitter(input, args);
+				command = args[0];
+				if (builtins(args) == 1)
+					continue; /*env builtin or cd -> restart loop*/
+				result = _fork(args, command);
+				loops++;
+				if (result != 0)
+				{
+					error(args, loops);
+				}
 			}
+			free(input);
 		}
-		else
-			wait(&status);
+		free(input);
 	}
 	return (0);
 }
-/*--------- main --------*/

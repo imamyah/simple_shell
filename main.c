@@ -1,8 +1,14 @@
 #include "shell.h"
 
+/**
+ * _getenv - get env
+ * @env_var: variable
+ * Return: char
+ */
+
 char *_getenv(const char *env_var)
 {
-	extern char **environ;
+	char **environ = NULL;
 	int i = 0;
 	char *key;
 
@@ -15,7 +21,13 @@ char *_getenv(const char *env_var)
 	}
 	return (NULL);
 }
+/*------- get env ----- */
 
+/**
+ * get_path - finds the path
+ * @command: input
+ * Return: path
+ */
 char *get_path(char *command)
 {
 	char *path = _getenv("PATH");
@@ -36,7 +48,14 @@ char *get_path(char *command)
 	}
 	return (0);
 }
+/* -------- get path ------ */
 
+/**
+ * get_string - get commands
+ * @buffer: buffer
+ * @delim: delimeter
+ * Return: str
+ */
 char **get_string(char *buffer, char *delim)
 {
 	char **arrays;
@@ -54,6 +73,15 @@ char **get_string(char *buffer, char *delim)
 	arrays[argc] = NULL;
 	return (arrays);
 }
+/* -------- get string ----- */
+
+/**
+ * main - main function
+ * @ac: arg count
+ * @av: arg vector
+ * @env: environ
+ * Return: int
+ */
 
 int main(int ac, char **av, char **env)
 {
@@ -66,26 +94,25 @@ int main(int ac, char **av, char **env)
 
 	while (1)
 	{
-		write (1, "> ", 2);
+		write(1, "> ", 2);
 		nread = getline(&buffer, &buffer_size, stdin);
 		if (nread == -1)
 		{
 			write(1, "\n", 1);
-			exit (1);
+			exit(1);
 		}
 		buffer[nread - 1] = '\0';
-		array = malloc(sizeof(char *) * 1024);
-		*array = buffer;
-		execve(array[0], array, NULL);
-
 		token = get_string(buffer, " \t\n");
 		if (strcmp(token[0], "exit") == 0)
 			exit(0);
 
-		
 		pid = fork();
 		if (pid == 0)
 		{
+			array = malloc(sizeof(char *) * 1024);
+			*array = buffer;
+			execve(array[0], array, NULL);
+
 			command = get_path(token[0]);
 			if (command)
 				execve(command, token, env);
@@ -98,3 +125,4 @@ int main(int ac, char **av, char **env)
 	}
 	return (0);
 }
+/*--------- main --------*/

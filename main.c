@@ -1,56 +1,6 @@
 #include "shell.h"
 
 /**
- * _getenv - get env
- * @env_var: variable
- * Return: char
- */
-
-char *_getenv(const char *env_var)
-{
-	char **environ = NULL;
-	int i = 0;
-	char *key;
-
-	while (environ[i])
-	{
-		key = strtok(environ[i], "=");
-		if (strcmp(env_var, key) == 0)
-			return (strtok(NULL, "\n"));
-		i++;
-	}
-	return (NULL);
-}
-/*------- get env ----- */
-
-/**
- * get_path - finds the path
- * @command: input
- * Return: path
- */
-char *get_path(char *command)
-{
-	char *path = _getenv("PATH");
-	char *token;
-	char *command_path;
-
-	token = strtok(path, ":");
-	while (token)
-	{
-		command_path = malloc(strlen(token) + strlen(command) + 2);
-		strcpy(command_path, token);
-		strcat(command_path, "/");
-		strcat(command_path, command);
-		if (access(command_path, X_OK) == 0)
-			return (command_path);
-		free(command_path);
-		token = strtok(NULL, ":");
-	}
-	return (0);
-}
-/* -------- get path ------ */
-
-/**
  * get_string - get commands
  * @buffer: buffer
  * @delim: delimeter

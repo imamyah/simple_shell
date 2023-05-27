@@ -1,43 +1,30 @@
 #include "shell.h"
-
 /**
- * main - creates a simple shell
- * @ac: arg count
- * @av: arg vector
- * Return: 0
+ * main - initialize the variables of the program
+ * @argc: number of values received from the command line
+ * @argv: values received from the command line
+ * @env: number of values received from the command line
+ * Return: zero on succes.
  */
-
-int main(int ac, char *av[])
+int main(int argc, char *argv[], char *env[])
 {
-	char *input, *command, *args[ARGS_SIZE];
-	int exit_loop = 0, loops = 0, result;
-	(void)ac;
-	(void)av;
+	int i = 0;
+	data_of_program data_struct = {NULL}, *data = &data_struct;
+	char *prompt = "";
 
-	if (isatty(STDIN_FILENO) == 1)
-	{/*if associated to a terminal*/
-		while (exit_loop != 1)
-		{/*shell main loop*/
-			write(STDOUT_FILENO, "Shell$ ", 7);
-			fflush(stdout); /*flush output buffer*/
-			input = read_cmd();
-			if (input != NULL)
-			{
-				comments(input);
-				splitter(input, args);
-				command = args[0];
-				if (builtins(args) == 1)
-					continue; /*env builtin or cd -> restart loop*/
-				result = _fork(args, command);
-				loops++;
-				if (result != 0)
-				{
-					error(args, loops);
-				}
-			}
-			free(input);
-		}
-		free(input);
+
+	inicialize_data(data, argc, argv, env);
+
+	signal(SIGINT, handle_ctrl_c);
+
+	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && argc == 1)
+	{
+		errno = 2;
+		prompt = PROMPT_MSG;
+		i++;
 	}
+	errno = 0;
+	sisifo(prompt, data);
 	return (0);
 }
+/*------------*/

@@ -23,7 +23,7 @@ int builtin_env(data_of_program *data)
 			/* temporally */
 				var_copy = str_duplicate(env_get_key(cpname, data));
 				if (var_copy != NULL)
-				env_set_key(cpname, data->tokens[1] + j + 1, dat);
+				env_set_key(cpname, data->tokens[1] + j + 1, data);
 
 				/* print the environ */
 				print_environ(data);
